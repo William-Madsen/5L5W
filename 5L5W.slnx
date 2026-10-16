@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="../../../Desktop/assignment-collection-test-master/CollectionTester.csproj" />
+  <Project Path="../5Letter-5Word/5Letter-5Word/5Letter-5Word.csproj" />
+  <Project Path="Ting/5Letter-5Word2.csproj" Id="51d49f54-9486-4ba3-a83c-60d1f899698e" />
+  <Project Path="Wpf_app/Wpf_app.csproj" />
+</Solution>

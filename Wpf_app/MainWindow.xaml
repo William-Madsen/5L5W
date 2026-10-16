@@ -1,0 +1,62 @@
+﻿<Window x:Class="Wpf_app.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Wpf_app"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="Black"/>
+                <GradientStop Color="#FF9C9C9C" Offset="1"/>
+                <GradientStop Color="#FF818181" Offset="0.007"/>
+                <GradientStop Color="#FF818181" Offset="0.316"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Grid Name="grid1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <ListBox Grid.Row="0" Name="lstFonts" Margin="10,10,400,10"
+                         ItemsSource="{Binding Text, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+        </Grid>
+        <TextBox IsReadOnly="True" Text="{Binding Clock }" Margin="417,10,223,372"/>
+        <TextBox IsReadOnly="True" Text="{Binding Count }" Margin="417,62,223,320"/>
+
+
+        <Rectangle Fill="Black" Height="4" Margin="0,150,0,0"/>
+        <Button x:Name="Run_button" FontFamily="Arial" Width="100" Margin="33,305,667,88" Background="#FFFDFDFD" Click="Run_button_Click">
+            Run
+        </Button>
+        <Button x:Name="Download_button" FontFamily="Arial" Width="100" Margin="33,368,667,25" Background="White" Click="Download_button_Click">
+            Download
+        </Button>
+        <Button x:Name="Fil_button" FontFamily="Arial" Width="100" Margin="163,305,537,88" Background="White" Click="Fil_button_Click">
+            Select file
+        </Button>
+
+        <StatusBar Name="sbar" 
+           VerticalAlignment="Bottom" Background="#FF9C9C9C" Height="34" Margin="148,0,0,29" >
+
+           
+            <StatusBarItem>
+                <ProgressBar Width="638" Height="20"
+                 Name="progressBar1" ValueChanged="progressBar1_ValueChanged">
+
+                </ProgressBar>
+                
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem HorizontalAlignment="Right">
+            </StatusBarItem>
+        </StatusBar>
+        <TextBox IsReadOnly="True" Text="{Binding FilePath}" Margin="277,305,28,88">
+        </TextBox> 
+    </Grid>
+</Window>
