@@ -62,33 +62,36 @@ namespace Wpf_app
             }
         }
 
-        private ObservableCollection<string> complete_words;
-        public ObservableCollection<string> Complete_words
+        private int _percent = 0;
+        public int Percent
         {
-            get { return complete_words; }
-            set
+            get { return _percent; }
+            set { _percent = value; NotifyPropertyChanged("Percent"); }
+
+        }
+
+        private async void Run_button_Click(object sender, RoutedEventArgs e)
+        {
+            IProgress<Report.how_long> progess = new Progress<Report.how_long>((Report.how_long progess) =>
             {
-                complete_words = value;
-                NotifyPropertyChanged(nameof(Complete_words));
-            }
-        }
-        public double change_progessbar()
-        {
-            progressBar.Value++;
-            return progressBar.Value;
-        }
-
-        private void Run_button_Click(object sender, RoutedEventArgs e)
-        {
-
+                progressBar.Value = progess.How_far / progess.total;
+            });
             var watch = Stopwatch.StartNew();
 
-            _5W5L.bits(filePath, Text);
+            List<string> _Text = new List<string>();
+            await Task.Run(() =>
+            {
+                _5W5L.bits(filePath, _Text, progess);
+            });
+            for (int i = 0; i < _Text.Count; i++)
+            {
+                Text.Add(_Text[i]);
+            }
 
             watch.Stop();
+            Percent = 100;
             Clock = watch.Elapsed.ToString();
             Count = Text.Count();
-            Complete_words = Text;
 
         }
 
@@ -118,8 +121,7 @@ namespace Wpf_app
                 File.WriteAllLines(dialog.FileName, Text);
             }
         }
-
-        private void progressBar1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void progressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
 
         }

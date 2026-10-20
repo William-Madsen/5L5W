@@ -45,8 +45,8 @@
            VerticalAlignment="Bottom" Background="#FF9C9C9C" Height="34" Margin="148,0,0,29" >
 
 
-            <ProgressBar Width="638" Height="20" Minimum="0"
-                 Name="progressBar" ValueChanged="progressBar1_ValueChanged" Value="0"/>
+            <ProgressBar Width="638" Height="20"
+                 Name="progressBar" ValueChanged="progressBar_ValueChanged" Value="{Binding Percent, UpdateSourceTrigger=PropertyChanged}"/>
 
             <Separator/>
             <StatusBarItem HorizontalAlignment="Right">
