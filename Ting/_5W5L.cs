@@ -38,15 +38,13 @@ namespace Ting
         }
         public async void update()
         {
-            Thread.Sleep(50);
-
-            how_long how_longer = new how_long(How_far, How_long);
-            progess.Report(how_longer);
-
-
-            if (Rerun)
+            while(Rerun)
             {
-                update();
+                Thread.Sleep(50);
+
+                how_long how_longer = new how_long(How_far, How_long);
+                progess.Report(how_longer);
+
             }
         }
 
@@ -66,7 +64,7 @@ namespace Ting
         static List<string> ValidWords = new List<string>();
 
 
-        public static void bits(string filename, List<string>Text, IProgress<Report.how_long> progess)
+        public static void bits(string filename, List<string> Text, IProgress<Report.how_long> progess)
         {
 
             // hvor mang threads skal køre
@@ -184,16 +182,14 @@ namespace Ting
 
                 }
             }
-
             report.dispose();
-
         }
 
         static void Words_counter(int id, int t, Dictionary<uint, List<string>> Bit_Maks, Report report)
         {
             List<uint> Keys = new List<uint>(Bit_Maks.Keys);
             List<uint[]> wait_word = new List<uint[]>(4096);
-
+            ulong search = 0;
 
             for (int x = id * (Keys.Count() / t) - (Keys.Count() / t); x < (Keys.Count() / t) + (id * (Keys.Count() / t) - (Keys.Count() / t)); x++)
             {
@@ -202,7 +198,7 @@ namespace Ting
                 {
                     if ((Keys[x] & Keys[y]) != 0)
                     {
-                        report.report((ulong)Math.Pow(Bit_Maks.Count, 4));
+                        search += (ulong)Math.Pow(Bit_Maks.Count, 4);
                         continue;
                     }
                     uint key_1 = (Keys[x] | Keys[y]);
@@ -211,7 +207,7 @@ namespace Ting
                     {
                         if ((key_1 & Keys[z]) != 0)
                         {
-                            report.report((ulong)Math.Pow(Bit_Maks.Count, 3));
+                            search += (ulong)Math.Pow(Bit_Maks.Count, 3);
                             continue;
                         }
                         uint key_2 = (key_1 | Keys[z]);
@@ -219,7 +215,7 @@ namespace Ting
                         {
                             if ((key_2 & Keys[i]) != 0)
                             {
-                                report.report((ulong)Math.Pow(Bit_Maks.Count, 2));
+                                search += (ulong)Math.Pow(Bit_Maks.Count, 2);
                                 continue;
                             }
                             uint key_3 = (key_2 | Keys[i]);
@@ -227,12 +223,12 @@ namespace Ting
                             {
                                 if ((key_3 & Keys[j]) != 0)
                                 {
-                                    report.report((ulong)Math.Pow(Bit_Maks.Count, 1));
+                                    search += (ulong)Math.Pow(Bit_Maks.Count, 1);
                                     continue;
                                 }
                                 uint key_4 = (key_3 | Keys[j]);
 
-                                report.report(1);
+                                search += 1;
 
                                 uint[] wait_words = { Keys[x], Keys[y], Keys[z], Keys[i], Keys[j] };
 
@@ -245,12 +241,12 @@ namespace Ting
                                         wait_word_arr.AddRange(wait_word);
                                         wait_word.Clear();
                                     }
+                                    report.report(search);
                                 }
 
 
 
                             }
-
                         }
                     }
                 }
@@ -260,6 +256,7 @@ namespace Ting
                 wait_word_arr.AddRange(wait_word);
             }
             wait_word.Clear();
+            report.report(search);
         }
 
 

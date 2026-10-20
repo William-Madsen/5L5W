@@ -14,6 +14,7 @@ namespace Wpf_app
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
+
         public ObservableCollection<string> Text { get; } = new();
 
         public MainWindow()
@@ -72,6 +73,7 @@ namespace Wpf_app
 
         private async void Run_button_Click(object sender, RoutedEventArgs e)
         {
+
             IProgress<Report.how_long> progess = new Progress<Report.how_long>((Report.how_long progess) =>
             {
                 progressBar.Value = progess.How_far / progess.total;
@@ -108,6 +110,8 @@ namespace Wpf_app
 
         private void Download_button_Click(object sender, RoutedEventArgs e)
         {
+
+
             if (Text.Count == 0) return;
             var dialog = new Microsoft.Win32.SaveFileDialog();
             dialog.FileName = "Result";
