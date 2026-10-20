@@ -88,6 +88,7 @@ namespace Ting
             {
                 for (int w = 0; w < bit_masks_tjek.Count; w++)
                 {
+                    word_count = 0;
                     foreach (var ex_word_tjek in bit_masks_tjek[w])
                     {
                         foreach (var word_tjek in bit_array)
@@ -106,9 +107,9 @@ namespace Ting
                 }
                 if (word_count == 5)
                 {
+                    word_count = 0;
                     continue;
                 }
-                word_count = 0;
                 bit_masks_tjek.Add(bit_array);
 
                 foreach (var word_0 in Bit_Masks.GetValueOrDefault(bit_array[0]))
@@ -122,18 +123,10 @@ namespace Ting
                                 foreach (var word_4 in Bit_Masks.GetValueOrDefault(bit_array[4]))
                                 {
 
-                                    uint already_ex = (bit_array[0]);
-                                    if (All_Bit_masks.Contains(already_ex))
-                                    {
-                                        continue;
-                                    }
-                                    else
-                                    {
-                                        All_Bit_masks.Add(bit_array[0]);
-                                        string final_word = word_0 + " " + word_1 + " " + word_2 + " " + word_3 + " " + word_4;
-                                        Text.Add(final_word);
-                                        count++;
-                                    }
+                                    All_Bit_masks.Add(bit_array[0]);
+                                    string final_word = word_0 + " " + word_1 + " " + word_2 + " " + word_3 + " " + word_4;
+                                    Text.Add(final_word);
+                                    count++;
 
                                 }
                             }
@@ -195,8 +188,8 @@ namespace Ting
                                     lock (locker_list)
                                     {
                                         wait_word_arr.AddRange(wait_word);
-
                                     }
+                                    wait_word.Clear();
                                 }
 
 
@@ -210,8 +203,8 @@ namespace Ting
             lock (locker_list)
             {
                 wait_word_arr.AddRange(wait_word);
-
             }
+            wait_word.Clear();
         }
 
 

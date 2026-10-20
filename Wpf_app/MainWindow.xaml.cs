@@ -1,18 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Net.NetworkInformation;
-using System.Security.Cryptography;
-using System.Text;
+using System.Net;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
+using System.IO;
 using Ting;
+
 
 namespace Wpf_app
 {
@@ -69,8 +62,25 @@ namespace Wpf_app
             }
         }
 
+        private ObservableCollection<string> complete_words;
+        public ObservableCollection<string> Complete_words
+        {
+            get { return complete_words; }
+            set
+            {
+                complete_words = value;
+                NotifyPropertyChanged(nameof(Complete_words));
+            }
+        }
+        public double change_progessbar()
+        {
+            progressBar.Value++;
+            return progressBar.Value;
+        }
+
         private void Run_button_Click(object sender, RoutedEventArgs e)
         {
+
             var watch = Stopwatch.StartNew();
 
             _5W5L.bits(filePath, Text);
@@ -78,6 +88,7 @@ namespace Wpf_app
             watch.Stop();
             Clock = watch.Elapsed.ToString();
             Count = Text.Count();
+            Complete_words = Text;
 
         }
 
@@ -94,14 +105,23 @@ namespace Wpf_app
 
         private void Download_button_Click(object sender, RoutedEventArgs e)
         {
+            if (Text.Count == 0) return;
+            var dialog = new Microsoft.Win32.SaveFileDialog();
+            dialog.FileName = "Result";
+            dialog.DefaultExt = ".txt";
+            dialog.Filter = "Text documents (.txt)|*.txt";
 
+            bool? result = dialog.ShowDialog();
+
+            if (result == true)
+            {
+                File.WriteAllLines(dialog.FileName, Text);
+            }
         }
 
         private void progressBar1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
 
         }
-
-   
     }
 }
