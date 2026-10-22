@@ -62,6 +62,7 @@ namespace Ting
         static object locker_list = new object();
         static Dictionary<uint, List<string>> Bit_Masks = new Dictionary<uint, List<string>>();
         static List<string> ValidWords = new List<string>();
+        static int _wordLenght = 5;
 
 
         public static void bits(string filename, List<string> Text, IProgress<Report.how_long> progess)
@@ -77,45 +78,59 @@ namespace Ting
             // Ser kun hvor lang orderne er.
             foreach (string word in file_word)
             {
-                if (word.Length == 5)
+                if (word.Length != _wordLenght)
+                    continue;
+
+                /*
+                   bool isgood = true;
+                   for (int q = 0; q < word.Length - 1; q++)       //TODO: abcce abcec
+                   {
+                       if (word[q] == word[q + 1])
+                       {
+                           isgood = false;
+                           break;
+                       }
+
+                   }
+                */
+                
+                bool isgood = true;
+                char[] SeeCharacter = word.ToCharArray();
+                SeeCharacter.Sort();
+
+                if (SeeCharacter[0] == SeeCharacter[1])
+                    isgood = false;
+                if (SeeCharacter[2] == SeeCharacter[3])
+                    isgood = false;
+                if (SeeCharacter[3] == SeeCharacter[4])
+                    isgood = false;
+
+                if (isgood)
                 {
-                    bool isgood = true;
-                    for (int q = 0; q < word.Length - 1; q++)
+
+                    uint wait_mask = 0;
+
+                    // looper i gemme hver char
+                    foreach (char ch in word.ToCharArray())
                     {
-                        if (word[q] == word[q + 1])
-                        {
-                            isgood = false;
-                            break;
-                        }
+                        // renger ud hvad bit nr det er
+                        int bit = ch - 'a';
 
+                        //tilføger wait mask - |= Betyder at den compare de to på hver sin side - 1u det er en unsign int
+                        wait_mask |= 1u << bit;
                     }
-                    if (isgood)
+
+                    if (Bit_Masks.TryGetValue(wait_mask, out List<string> wait_good_words))
                     {
-
-                        uint wait_mask = 0;
-
-                        // looper i gemme hver char
-                        foreach (char ch in word.ToCharArray())
-                        {
-                            // renger ud hvad bit nr det er
-                            int bit = ch - 'a';
-
-                            //tilføger wait mask - |= Betyder at den compare de to på hver sin side - 1u det er en unsign int
-                            wait_mask |= 1u << bit;
-                        }
-
-                        if (Bit_Masks.TryGetValue(wait_mask, out List<string> wait_good_words))
-                        {
-                            wait_good_words.Add(word);
-                        }
-                        else
-                        {
-                            List<string> wait_words = new List<string>();
-                            wait_words.Add(word);
-                            Bit_Masks.Add(wait_mask, wait_words);
-                        }
-
+                        wait_good_words.Add(word);
                     }
+                    else
+                    {
+                        List<string> wait_words = new List<string>();
+                        wait_words.Add(word);
+                        Bit_Masks.Add(wait_mask, wait_words);
+                    }
+
                 }
             }
 
