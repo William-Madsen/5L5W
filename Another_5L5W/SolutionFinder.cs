@@ -1,97 +1,93 @@
-﻿using System.Security.Cryptography;
+﻿using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Another_5L5W
 {
     public class SolutionFinder
     {
+
         int _wordLength;
         int _numberOfWords;
 
-        string[] _words;
+        string[]? _words;
+        int[] _masks;
+        private Dictionary<int, string> _bitMasksDictionary = new Dictionary<int, string>();
 
         public SolutionFinder(int wordLength, int numberOfWords)
         {
             if (wordLength * numberOfWords > 26)
-                throw new ArgumentOutOfRangeException("Kræver mere end 26 bogstaver");
+                throw new ArgumentOutOfRangeException("Needs more than 26 characters");
             _numberOfWords = numberOfWords;
             _wordLength = wordLength;
         }
+
 
         public int LoadWords(string file)
         {
             _words = File.ReadAllLines(file);
             _words = _words.Where(x => x.Length == _wordLength && x.Distinct().Count() == _wordLength).ToArray();
+
+            if (_words == null)
+                throw new NullReferenceException("No words loaded");
+
+            foreach (var word in _words)
+            {
+                _bitMasksDictionary.TryAdd(wordToMask(word), word);
+            }
+            Console.WriteLine("Masked: {0}", _bitMasksDictionary.Count());
+            _masks = _bitMasksDictionary.Keys.Order().ToArray();
+            /*
+            Console.WriteLine("Masks: {0:B26} => word: {1}", _masks[5], bitMasksDictionary[_masks[5]]);
+            Console.WriteLine("Masks: {0:B26} => word: {1}", _masks[6], bitMasksDictionary[_masks[6]]);
+            Console.WriteLine("Masks: {0:B26} => word: {1}", _masks[7], bitMasksDictionary[_masks[7]]);
+            Console.WriteLine("Masks: {0:B26} => word: {1}", _masks[8], bitMasksDictionary[_masks[8]]);
+            Console.WriteLine("Masks: {0:B26} => word: {1}", _masks[9], bitMasksDictionary[_masks[9]]);
+            */
             return _words.Length;
+        }
+
+        private int wordToMask(string word)
+        {
+            int mask = 0;
+            foreach (char ch in word)
+            {
+                mask |= 1 << (ch - 'a');
+            }
+            return mask;
         }
 
 
         public string[] FindSolutions()
         {
-            int count = 0;
-            int processingCount = 0;
             List<string> solutions = new List<string>();
-            RecurviveFind("", _words.Length - 1, solutions);
-            /*for (var a = _words.Length - 1; a >= 0; a--)
-            {
-                for (var b = a - 1; b >= 0; b--)
-                {
-                    var ab = _words[a] + _words[b];
-                    if (ab.Distinct().Count() != 2 * _wordLength)
-                        continue;
+            BitMaskFinder(0, _masks.Length - 1, solutions, new List<int>());
 
-                    for (var c = b - 1; c >= 0; c--)
-                    {
-                        var abc = _words[a] + _words[b] + _words[c];
-                        if (abc.Distinct().Count() != 3 * _wordLength)
-                            continue;
-
-                        for (var d = c - 1; d >= 0; d--)
-                        {
-                            var abcd = _words[a] + _words[b] + _words[c] + _words[d];
-                            if (abcd.Distinct().Count() != 4 * _wordLength)
-                                continue;
-
-                            for (var e = d - 1; e >= 0; e--)
-                            {
-                                var abcde = _words[a] + _words[b] + _words[c] + _words[d] + _words[e];
-                                if (abcde.Distinct().Count() != 5 * _wordLength)
-                                    continue;
-                                count++;
-                                processingCount++;
-                                solutions.Add(abcde);
-                                if (processingCount == 10)
-                                {
-                                    Console.WriteLine("Processing...");
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }*/
             return solutions.ToArray();
         }
 
-        private void RecurviveFind(string usedWords, int startIndex, List<string> solutions)
+
+        private void BitMaskFinder(int usedMasks, int startIndex, List<string> solutions, List<int> words)
         {
-            //Exit?
-            if( usedWords.Length == _numberOfWords*_wordLength)
+            if (words.Count() == _numberOfWords)
             {
-                for(var a = 1; a < _numberOfWords; a++)
+                //TODO: add solutions
+                Console.WriteLine("{0:b26}", usedMasks);
+                foreach (var mask in words)
                 {
-                    usedWords = usedWords.Insert(a * _wordLength + (a - 1), " ");
+                    Console.WriteLine(_bitMasksDictionary[mask]);
                 }
-                solutions.Add(usedWords);
                 return;
             }
 
-            //Find
-            for(var i = startIndex; i >= 0; i--)
+            for (var i = startIndex; i >= 0; i--)
             {
-                string joinedWords = string.Join("", usedWords, _words[i]);
-                if (joinedWords.Distinct().Count() != joinedWords.Length)
-                    continue;
-                RecurviveFind(joinedWords, i - 1, solutions);
+                if ((usedMasks & _masks[i]) == 0)
+                {
+                    List<int> newWords = new List<int>(words);
+                    newWords.Add(_masks[i]);
+                    BitMaskFinder(usedMasks | _masks[i], i - 1, solutions, newWords);
+                }
             }
         }
     }
