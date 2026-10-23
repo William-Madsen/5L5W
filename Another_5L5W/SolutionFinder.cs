@@ -35,15 +35,7 @@ namespace Another_5L5W
             {
                 _bitMasksDictionary.TryAdd(wordToMask(word), word);
             }
-            Console.WriteLine("Masked: {0}", _bitMasksDictionary.Count());
             _masks = _bitMasksDictionary.Keys.Order().ToArray();
-            /*
-            Console.WriteLine("Masks: {0:B26} => word: {1}", _masks[5], bitMasksDictionary[_masks[5]]);
-            Console.WriteLine("Masks: {0:B26} => word: {1}", _masks[6], bitMasksDictionary[_masks[6]]);
-            Console.WriteLine("Masks: {0:B26} => word: {1}", _masks[7], bitMasksDictionary[_masks[7]]);
-            Console.WriteLine("Masks: {0:B26} => word: {1}", _masks[8], bitMasksDictionary[_masks[8]]);
-            Console.WriteLine("Masks: {0:B26} => word: {1}", _masks[9], bitMasksDictionary[_masks[9]]);
-            */
             return _words.Length;
         }
 
@@ -69,14 +61,11 @@ namespace Another_5L5W
 
         private void BitMaskFinder(int usedMasks, int startIndex, List<string> solutions, List<int> words)
         {
+
             if (words.Count() == _numberOfWords)
             {
-                //TODO: add solutions
-                Console.WriteLine("{0:b26}", usedMasks);
-                foreach (var mask in words)
-                {
-                    Console.WriteLine(_bitMasksDictionary[mask]);
-                }
+                var solutionWords = words.Select(mask => _bitMasksDictionary[mask]);
+                solutions.Add(string.Join(", ", solutionWords));
                 return;
             }
 
@@ -88,6 +77,7 @@ namespace Another_5L5W
                     newWords.Add(_masks[i]);
                     BitMaskFinder(usedMasks | _masks[i], i - 1, solutions, newWords);
                 }
+
             }
         }
     }
