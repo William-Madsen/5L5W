@@ -1,8 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Another_5L5W
+﻿namespace Another_5L5W
 {
     public class SolutionFinder
     {
@@ -12,9 +8,14 @@ namespace Another_5L5W
 
         string[]? _words;
         int[] _masks;
+        private int _maxValue;
+
+        public int FirstWords { get => _maxValue; private set; }
+
         private Dictionary<int, string> _bitMasksDictionary = new Dictionary<int, string>();
 
         public event EventHandler<string> FoundSolution;
+        public event EventHandler<int> Progessbar;
 
         public SolutionFinder(int wordLength, int numberOfWords)
         {
@@ -59,10 +60,9 @@ namespace Another_5L5W
 
             return solutions.ToArray();
         }
-
-
         private void BitMaskFinder(int usedMasks, int startIndex, List<string> solutions, List<int> words)
         {
+            _maxValue = _masks.Length;
 
             if (words.Count() == _numberOfWords)
             {
@@ -72,7 +72,6 @@ namespace Another_5L5W
                 OnFoundSolution(solution);
                 return;
             }
-
             for (var i = startIndex; i >= 0; i--)
             {
                 if ((usedMasks & _masks[i]) == 0)
@@ -80,6 +79,10 @@ namespace Another_5L5W
                     List<int> newWords = new List<int>(words);
                     newWords.Add(_masks[i]);
                     BitMaskFinder(usedMasks | _masks[i], i - 1, solutions, newWords);
+                }
+                if ( usedMasks == 0)
+                {
+                    OnProgessbar(FirstWords-i);
                 }
             }
         }
@@ -89,6 +92,14 @@ namespace Another_5L5W
             EventHandler<string> handler = FoundSolution;
             if (handler != null)
                 handler(this, solution);
+        }
+
+        protected virtual void OnProgessbar(int progress)
+        {
+            EventHandler<int> handler = Progessbar;
+            if (handler != null)
+                handler(this, progress);
+            
         }
     }
 }
