@@ -125,9 +125,5 @@ namespace Wpf_app
                 File.WriteAllLines(dialog.FileName, Text);
             }
         }
-        private void progressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-
-        }
     }
 }

@@ -25,7 +25,7 @@
             _wordLength = wordLength;
         }
 
-
+        
         public int LoadWords(string file)
         {
             _words = File.ReadAllLines(file);

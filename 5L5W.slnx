@@ -1,8 +1,7 @@
 <Solution>
   <Project Path="../../../Desktop/assignment-collection-test-master/CollectionTester.csproj" />
-  <Project Path="../5Letter-5Word/5Letter-5Word/5Letter-5Word.csproj" />
   <Project Path="Another_5L5W/Another_5L5W.csproj" Id="f368dd50-c92f-4847-8a28-a36e8b6e51cf" />
   <Project Path="Another_5W5L_Console/Another_5W5L_Console.csproj" Id="a099a4f1-3287-4a84-9e79-8a899ed7d646" />
-  <Project Path="Ting/5Letter-5Word2.csproj" Id="51d49f54-9486-4ba3-a83c-60d1f899698e" />
+  <Project Path="Another_WPF_App/Another_WPF_App.csproj" Id="628b8631-84ca-427e-8438-44fdf0ea2d00" />
   <Project Path="Wpf_app/Wpf_app.csproj" />
 </Solution>
