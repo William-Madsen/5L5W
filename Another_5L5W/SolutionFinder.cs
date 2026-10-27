@@ -14,6 +14,8 @@ namespace Another_5L5W
         int[] _masks;
         private Dictionary<int, string> _bitMasksDictionary = new Dictionary<int, string>();
 
+        public event EventHandler<string> FoundSolution;
+
         public SolutionFinder(int wordLength, int numberOfWords)
         {
             if (wordLength * numberOfWords > 26)
@@ -65,7 +67,9 @@ namespace Another_5L5W
             if (words.Count() == _numberOfWords)
             {
                 var solutionWords = words.Select(mask => _bitMasksDictionary[mask]);
-                solutions.Add(string.Join(", ", solutionWords));
+                var solution = string.Join(", ", solutionWords);
+                solutions.Add(solution);
+                OnFoundSolution(solution);
                 return;
             }
 
@@ -77,8 +81,14 @@ namespace Another_5L5W
                     newWords.Add(_masks[i]);
                     BitMaskFinder(usedMasks | _masks[i], i - 1, solutions, newWords);
                 }
-
             }
+        }
+
+        protected virtual void OnFoundSolution(string solution)
+        {
+            EventHandler<string> handler = FoundSolution;
+            if (handler != null)
+                handler(this, solution);
         }
     }
 }
