@@ -66,17 +66,17 @@ namespace Another_WPF_App
         {
             if (string.IsNullOrWhiteSpace(FilePath) || !File.Exists(FilePath))
             {
-                Status = "Vælg en file";
+                Status = "Select a valid file";
                 return;
             }
             if (Words <= 0)
             {
-                Status = "Vælg et antal ord";
+                Status = "Select a valid number of Words";
                 return;
             }
             if (Letters <= 0)
             {
-                Status = "Vælg et antal bogstaver";
+                Status = "Select a valid number of Letters";
                 return;
             }
 
