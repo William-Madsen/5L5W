@@ -22,8 +22,10 @@
 
         public SolutionFinder(int wordLength, int numberOfWords)
         {
+            /*
             if (wordLength * numberOfWords > 26)
                 throw new ArgumentOutOfRangeException("Needs more than 26 characters");
+            */
             _numberOfWords = numberOfWords;
             _wordLength = wordLength;
         }

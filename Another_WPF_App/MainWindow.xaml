@@ -47,8 +47,8 @@
         <TextBox x:Name="FilePathTextBox" IsReadOnly="True" Margin="277,305,28,88" Text="{Binding FilePath, UpdateSourceTrigger=PropertyChanged}" />
 
 
-        <TextBox Margin="563,217,96,165" Name="WordsTextBox" Text="" TextChanged="WordsTextBox_TextChanged"/>
-        <TextBox Margin="417,217,242,165" Name="LettersTextBox" Text="" TextChanged="LettersTextBox_TextChanged"/>
+        <TextBox Margin="417,217,242,165" Name="WordsTextBox" Text="" TextChanged="WordsTextBox_TextChanged"/>
+        <TextBox Margin="563,217,95,165" Name="LettersTextBox" Text="" TextChanged="LettersTextBox_TextChanged"/>
         <TextBox IsReadOnly="True" Margin="417,160,242,222" Name="WordsTextBox_say" Text="How many Words?"/>
         <TextBox IsReadOnly="True" Margin="563,160,96,222" Name="LetterTextBox_say" Text="How many letters?"/>
 

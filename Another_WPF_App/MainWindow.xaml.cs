@@ -79,6 +79,11 @@ namespace Another_WPF_App
                 Status = "Select a valid number of Letters";
                 return;
             }
+            if (Words * Letters > 26)
+            {
+                Status = "No more than 26 characters (Words * Letters)";
+                return;
+            }
 
             Run_button.IsEnabled = false;
             Fil_button.IsEnabled = false;
@@ -105,7 +110,7 @@ namespace Another_WPF_App
 
             _wordsLoaded = result.wordsLoaded;
             Status = $"Found {result.solutions.Length} solutions.";
-
+     
             stopWatch.Stop();
             Clock = stopWatch.Elapsed.ToString(@"mm\:ss\.fff");
             progressBar.Value = _wordsLoaded;
