@@ -9,6 +9,9 @@
         string[]? _words;
         int[] _masks;
         private int _maxValue;
+        private int _progress;
+        private int _lastReportedProgress;
+        private readonly object _progressLock = new();
 
         public int FirstWords { get => _maxValue; private set; }
 
@@ -25,7 +28,7 @@
             _wordLength = wordLength;
         }
 
-        
+
         public int LoadWords(string file)
         {
             _words = File.ReadAllLines(file);
@@ -56,34 +59,62 @@
         public string[] FindSolutions()
         {
             List<string> solutions = new List<string>();
-            BitMaskFinder(0, _masks.Length - 1, solutions, new List<int>());
+            _maxValue = _masks.Length;
+            Interlocked.Exchange(ref _progress, 0);
+            Interlocked.Exchange(ref _lastReportedProgress, 0);
+            BitMaskFinder(0, _masks.Length, solutions, new List<int>());
 
             return solutions.ToArray();
         }
         private void BitMaskFinder(int usedMasks, int startIndex, List<string> solutions, List<int> words)
         {
-            _maxValue = _masks.Length;
-
             if (words.Count() == _numberOfWords)
             {
                 var solutionWords = words.Select(mask => _bitMasksDictionary[mask]);
                 var solution = string.Join(", ", solutionWords);
+
                 solutions.Add(solution);
+
                 OnFoundSolution(solution);
                 return;
             }
-            for (var i = startIndex; i >= 0; i--)
+            if (usedMasks == 0)
             {
-                if ((usedMasks & _masks[i]) == 0)
+                Parallel.For(0, startIndex, ctr =>
                 {
-                    List<int> newWords = new List<int>(words);
-                    newWords.Add(_masks[i]);
-                    BitMaskFinder(usedMasks | _masks[i], i - 1, solutions, newWords);
-                }
-                if ( usedMasks == 0)
+                    if ((usedMasks & _masks[ctr]) == 0)
+                    {
+                        List<int> newWords = new List<int>(words);
+                        newWords.Add(_masks[ctr]);
+                        BitMaskFinder(usedMasks | _masks[ctr], ctr - 1, solutions, newWords);
+                    }
+
+                    ReportProgress(Interlocked.Increment(ref _progress));
+                });
+            }
+            else
+            {
+                for (var i = startIndex; i >= 0; i--)
                 {
-                    OnProgessbar(FirstWords-i);
+                    if ((usedMasks & _masks[i]) == 0)
+                    {
+                        List<int> newWords = new List<int>(words);
+                        newWords.Add(_masks[i]);
+                        BitMaskFinder(usedMasks | _masks[i], i - 1, solutions, newWords);
+                    }
                 }
+            }
+        }
+
+        private void ReportProgress(int progress)
+        {
+            lock (_progressLock)
+            {
+                if (progress <= _lastReportedProgress)
+                    return;
+
+                _lastReportedProgress = progress;
+                OnProgessbar(progress);
             }
         }
 
@@ -99,7 +130,7 @@
             EventHandler<int> handler = Progessbar;
             if (handler != null)
                 handler(this, progress);
-            
+
         }
     }
 }

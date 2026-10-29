@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Another_5L5W\Another_5L5W.csproj" />
-    <ProjectReference Include="..\Another_5W5L_Console\Another_5W5L_Console.csproj" />
   </ItemGroup>
 
 </Project>

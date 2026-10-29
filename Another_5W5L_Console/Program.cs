@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Another_5W5L_Console
 {
-    public class Collect
+    public class Program
     {
         private static int _wordsLoaded = 0;
         private static int _progress = 0;
@@ -13,12 +13,11 @@ namespace Another_5W5L_Console
             var solutionFinder = new SolutionFinder(5, 5);
             solutionFinder.FoundSolution += FoundSolutionWriter;
             solutionFinder.Progessbar += ProgressBar;
-            _wordsLoaded = solutionFinder.LoadWords(@"C:\Users\temp\source\repos\Wpf_app\Another_5L5W\List\words_beta.txt");
+            _wordsLoaded = solutionFinder.LoadWords(@"C:\Users\temp\source\repos\5Letter-5Word\5Letter-5Word\List\words_beta.txt");
             Console.WriteLine("{0} words found", _wordsLoaded);
             string[] solutions = solutionFinder.FindSolutions();
 
             Console.WriteLine("Found {0} solutions", solutions.Length);
-
         }
 
         private static void ProgressBar(object? sender, int e)

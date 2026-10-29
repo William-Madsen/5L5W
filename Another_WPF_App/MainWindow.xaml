@@ -21,35 +21,36 @@
                 <RowDefinition Height="2*"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <ListBox Grid.Row="0" Name="lstFonts" Margin="10,10,400,10"/>
+            <ListBox Grid.Row="0" Name="lstFonts" Margin="10,10,400,10" ItemsSource="{Binding Text}"/>
         </Grid>
 
-        <TextBox IsReadOnly="True"  Margin="417,10,223,372"/>
-        <TextBox IsReadOnly="True"  Margin="417,62,223,320"/>
-
-
-        <Rectangle Fill="Black" Height="4" Margin="0,150,0,0"/>
+        <TextBox IsReadOnly="True"  Margin="417,10,96,372" Name="ClockTextBox" Text="{Binding Clock}"/>
+        <TextBox IsReadOnly="True"  Margin="417,62,96,320" Name="StatusTextBox" Text="{Binding Status}"/>
         <Button Name="Run_button" FontFamily="Arial" Width="100" Margin="33,305,667,88" Background="#FFFDFDFD" Click="Run_button_Click">
             Run
         </Button>
-        <Button x:Name="Download_button" FontFamily="Arial" Width="100" Margin="33,368,667,25" Background="White" Click="Download_button_Click">
+        <Button Name="Download_button" FontFamily="Arial" Width="100" Margin="33,368,667,25" Background="White" Click="Download_button_Click">
             Download
         </Button>
-        <Button x:Name="Fil_button" FontFamily="Arial" Width="100" Margin="163,305,537,88" Background="White" Click="Fil_button_Click">
+        <Button Name="Fil_button" FontFamily="Arial" Width="100" Margin="163,305,537,88" Background="White" Click="Fil_button_Click">
             Select file
         </Button>
 
         <StatusBar Name="sbar" 
-        VerticalAlignment="Bottom" Background="#FF9C9C9C" Height="34" Margin="148,0,0,29" >
+        VerticalAlignment="Bottom" Background="#FF9C9C9C" Height="34" Margin="148,0,0,28" >
 
 
-            <ProgressBar Width="638" Height="20" Name="progressBar" />
-
-            <Separator/>
+            <ProgressBar Width="623" Height="20" Name="progressBar" />
             <StatusBarItem HorizontalAlignment="Right">
             </StatusBarItem>
         </StatusBar>
-        <TextBox IsReadOnly="True" Margin="277,305,28,88">
-        </TextBox>
+        <TextBox x:Name="FilePathTextBox" IsReadOnly="True" Margin="277,305,28,88" Text="{Binding FilePath, UpdateSourceTrigger=PropertyChanged}" />
+
+
+        <TextBox Margin="563,217,96,165" Name="WordsTextBox" Text="" TextChanged="WordsTextBox_TextChanged"/>
+        <TextBox Margin="417,217,242,165" Name="LettersTextBox" Text="" TextChanged="LettersTextBox_TextChanged"/>
+        <TextBox IsReadOnly="True" Margin="417,160,242,222" Name="WordsTextBox_say" Text="How many Words?"/>
+        <TextBox IsReadOnly="True" Margin="563,160,96,222" Name="LetterTextBox_say" Text="How many letters?"/>
+
     </Grid>
 </Window>
